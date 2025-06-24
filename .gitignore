@@ -1,0 +1,14 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.Zone.Identifier
+
+# IDE settings
+.vscode/
+*.code-workspace
+.idea/
+
+# Ignore database updates from test execution
+# TODO: Store these in a database somewhere better than github
+**/*.db
