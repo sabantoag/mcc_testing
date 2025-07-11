@@ -29,7 +29,11 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 ### Usage
 Execute the pytest suite for a package:
 ```
-pytest tests/ -sv
+pytest tests/
+```
+Or with html generation
+```
+pytest tests/ --html=reports/report.html --self-contained-html
 ```
 
 ## Contributing
