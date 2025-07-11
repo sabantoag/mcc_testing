@@ -9,6 +9,7 @@ __pycache__/
 *.code-workspace
 .idea/
 
-# Ignore database updates from test execution
-# TODO: Store these in a database somewhere better than github
-**/*.db
+# Ignore SQLite or test result databases
+*.db
+*.sqlite
+*.sqlite3

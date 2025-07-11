@@ -21,4 +21,4 @@ def log_test_result(test_name, result_bool, measurement=None):
         conn.execute('''
             INSERT INTO test_results (test_name, result, measurement, timestamp)
             VALUES (?, ?, ?, ?)
-        ''', (test_name, 'PASS' if result_bool else 'FAIL', measurement, datetime.now()))
+        ''', (test_name, 'PASS' if result_bool else 'FAIL', measurement, datetime.now().isoformat()))
