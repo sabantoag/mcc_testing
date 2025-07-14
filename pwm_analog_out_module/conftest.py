@@ -37,7 +37,7 @@ def setup_database():
 
 def pytest_html_report_title(report):
     """Customize the HTML report title."""
-    report.title = "9999-DD-2004 Test Report"
+    report.title = f"9999-DD-2004 Test Report"
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
