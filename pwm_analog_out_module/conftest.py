@@ -1,9 +1,10 @@
 import logging
 import pytest
+import pytest_html
 from mcculw import ul
 from mcculw.device_info import DaqDeviceInfo
 
-from utils.db_logger import initialize_db
+from utils.db_logger import initialize_db, fetch_test_results, clear_test_results
 
 logger = logging.getLogger(__name__)
 
@@ -30,4 +31,25 @@ def daq_device():
 @pytest.fixture(scope="session", autouse=True)
 def setup_database():
     initialize_db()
+    clear_test_results()
     logger.debug("Database initialized")
+
+
+def pytest_html_report_title(report):
+    """Customize the HTML report title."""
+    report.title = "9999-DD-2004 Test Report"
+
+
+def pytest_html_results_summary(prefix, summary, postfix):
+    results = fetch_test_results()
+    if results:
+        html = ['<h2>Database Test Results</h2>',
+                '<table border="1"><tr><th>Test Name</th><th>Result</th><th>Measurement</th><th>Timestamp</th></tr>']
+        for test_name, result, measurement, timestamp in results:
+            if result == "FAIL":
+                row = f'<tr style="background-color: #ffe0e0;"><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{timestamp}</td></tr>'
+            else:
+                row = f'<tr><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{timestamp}</td></tr>'
+            html.append(row)
+        html.append('</table>')
+        summary.extend([pytest_html.extras.html(''.join(html))])
