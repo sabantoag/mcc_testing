@@ -4,6 +4,9 @@ __pycache__/
 *$py.class
 *.Zone.Identifier
 
+build/
+dist/
+
 # IDE settings
 .vscode/
 *.code-workspace

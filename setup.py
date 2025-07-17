@@ -46,7 +46,7 @@ setup(
     include_package_data=True,
     keywords='pwm_analog_out_module',
     name='pwm_analog_out_module',
-    packages=find_packages(include=['pwm_analog_out_module', 'pwm_analog_out_module.*']),
+    packages=find_packages(include=['pwm_analog_out_module', 'pwm_analog_out_module.*' 'utils', 'utils.*']),
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/sabantoag/mcc_testing.git',
