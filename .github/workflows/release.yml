@@ -1,0 +1,43 @@
+name: Build & Release EXE
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: 🔧 Build EXE
+      run: |
+        pyinstaller --onefile --windowed --console --clean --add-data "test_suites;test_suites" execute_tests.py
+
+    - name: 📦 Create Release & Upload Artifact
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/execute_tests.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 📦 Create Release with Notes
+      uses: softprops/action-gh-release@v2
+      with:
+        files: dist/execute_tests.exe
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
