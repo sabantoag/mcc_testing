@@ -5,8 +5,6 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import ttk
 
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '')))
-
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
