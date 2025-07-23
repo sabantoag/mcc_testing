@@ -25,7 +25,7 @@ jobs:
 
     - name: 🔧 Build EXE
       run: |
-        pyinstaller --onefile --windowed --console --clean --add-data "test_suites;test_suites" execute_tests.py
+        pyinstaller --clean execute_tests.spec
 
     - name: 📦 Create Release & Upload Artifact
       uses: softprops/action-gh-release@v2
