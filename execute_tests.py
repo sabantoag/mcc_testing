@@ -2,6 +2,7 @@ import os
 import sys
 import subprocess
 import tkinter as tk
+import webbrowser
 from tkinter import messagebox
 from tkinter import ttk
 
@@ -44,16 +45,19 @@ def run_tests():
 
     os.environ["UNIT_SN"] = sn
     test_dir_path = os.path.join(test_suites_dir, selected_dir)
+    output_report = os.path.join(os.getcwd(), f"report_{sn}.html")
     try:
         result = subprocess.run(
-            ["pytest", ".", f"--html=reports/report_{sn}.html", "--self-contained-html"],
-            capture_output=True, text=True,
-            cwd=test_dir_path
+            ["pytest", ".", f"--html={output_report}", "--self-contained-html"],
+            capture_output=True, text=True, cwd=test_dir_path,
+            creationflags=subprocess.CREATE_NO_WINDOW
         )
     finally:
         progress.destroy()
 
-    messagebox.showinfo("Done", f"Test report generated: report_{sn}.html\n\n{result.stdout}")
+    messagebox.showinfo("Done", f"Test report generated: \n{output_report}")
+    # After test completion, auto open the window with the report in a web browser.
+    webbrowser.open(output_report)
 
 root = tk.Tk()
 root.geometry("300x200")  # Set default size: width x height
