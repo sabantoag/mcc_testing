@@ -11,6 +11,7 @@ dist/
 .vscode/
 *.code-workspace
 .idea/
+.pre-commit-config.yaml
 
 # Ignore SQLite or test result databases
 *.db
