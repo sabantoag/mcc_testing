@@ -1,7 +1,7 @@
 # mcc_testing
 
 ## Overview
-This repository contains tools and scripts for testing and validating MCC (Modular Control Components) on Windows development environments.
+This repository contains tools and scripts for testing and validating MCC (Modular Control Components) on Windows development environments. Requires InstaCal installed to identify the MCC DAQ plugged in. Board number setup on InstaCal currently has to be configured to be 0.
 
 ## Features
 - Automated test scripts
@@ -14,6 +14,7 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 - Windows 10 or later
 - Python 3.8+
 - Git
+- [InstaCal 6.7+](https://digilent.com/reference/software/start)
 
 ### Installation
 1. Clone the repository:
@@ -29,11 +30,11 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 ### Usage
 Execute the pytest suite for a package:
 ```
-pytest tests/
+pytest test_suites/
 ```
 Or with html generation
 ```
-pytest tests/ --html=reports/report.html --self-contained-html
+pytest test_suites/ --html=reports/report.html --self-contained-html
 ```
 
 ## Contributing
