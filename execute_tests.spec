@@ -30,7 +30,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='execute_tests',
+    name='mcc_tests',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
