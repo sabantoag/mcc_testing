@@ -24,7 +24,7 @@ jobs:
 
     - name: 🔧 Build EXE
       run: |
-        pyinstaller --clean --onefile execute_tests.spec
+        pyinstaller --clean execute_tests.spec
 
     - name: 🚀 Create Release and Upload EXE
       uses: softprops/action-gh-release@v2
