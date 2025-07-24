@@ -16,7 +16,7 @@ ANALOG_INPUT = 0  # Analog input channel used to read manual mode voltage.
 EXPECTED_INPUT_VOLTAGE = 4.75  # Expected voltage in manual mode as test stand passes +5V into analog input channel.
 DIGITAL_OUT_LOW = 0
 DIGITAL_OUT_HIGH = 1
-TIME_DELAY_S = 10  # Time delay in seconds to allow hardware state to update
+TIME_DELAY_S = 1  # Time delay in seconds to allow hardware state to update
 
 
 def test_auto_mode(daq_device: DaqDeviceInfo):
@@ -32,9 +32,10 @@ def test_auto_mode(daq_device: DaqDeviceInfo):
         sleep(TIME_DELAY_S)  # Allow time for the state to change
         measured_voltage = measure_voltage(daq_device, ANALOG_INPUT)
 
-        # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into analog input channel.
+        # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into
+        # analog input channel.
         logger.debug(f'Measured voltage in auto mode: {measured_voltage:.2f} V')
-        result = True if measured_voltage >= EXPECTED_INPUT_VOLTAGE else False
+        result = True if measured_voltage <= EXPECTED_INPUT_VOLTAGE else False
 
         log_test_result(
             test_name="Auto Mode Test",
@@ -65,7 +66,8 @@ def test_manual_mode(daq_device: DaqDeviceInfo):
         sleep(TIME_DELAY_S)  # Allow time for the state to change
         measured_voltage = measure_voltage(daq_device, ANALOG_INPUT)
 
-        # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into analog input channel.
+        # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into
+        # analog input channel.
         logger.debug(f'Measured voltage in manual mode: {measured_voltage:.2f} V')
         result = True if measured_voltage >= EXPECTED_INPUT_VOLTAGE else False
 
@@ -111,7 +113,7 @@ def _setup_daq_device(daq_device: DaqDeviceInfo) -> Tuple[PortInfo, int]:
         raise Exception('Error: The port is not configured for output')
 
     port_value = 0xFF
-    logger.debug('Setting', port.type.name, 'to', port_value)
+    logger.debug(f'Setting {port.type.name} to {port_value}')
 
     # Output the values to configure the port.
     ul.d_out(daq_device.board_num, port.type, port_value)
