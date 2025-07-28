@@ -38,6 +38,11 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
         # Depending on device, duty cycles of 0. (0%) and 1.0 (100%) may cause errors.
         # Catch these in event they occur.
         for duty_cycle in duty_cycles:
+            result = False
+            measured_voltage = None
+            error_msg = None
+            actual_duty_cycle = duty_cycle  # Default fallback
+
             try:
                 actual_frequency, actual_duty_cycle, _ = ul.pulse_out_start(
                     daq_device.board_num, TMR_CHANNEL_NUMBER, FREQUENCY_HZ, duty_cycle
@@ -57,34 +62,35 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
 
                 logger.debug(f'Measured voltage: {measured_voltage:.2f} V, Expected voltage: {expected_voltage:.2f} V')
 
-                # # Check if measured voltage falls outside of expected calibrated value.
-                result = True if abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE else False
+                # Check if measured voltage falls outside of expected calibrated value.
+                result = abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE
 
-                log_test_result(
-                    test_name=f'Scan PWM Output - Duty Cycle {duty_cycle}',
-                    result_bool=result,
-                    measurement=measured_voltage
-                )
-                # Assert statement to ensure when tests fail, we stop testing immediately.
-                assert result, f'PWM output scan passed for duty cycle {duty_cycle}'
+                if not result:
+                    error_msg = f'PWM output scan failed for duty cycle {duty_cycle}'
+
             except ul.ULError:
-                log_test_result(
-                    test_name=f'Scan PWM Output - Duty Cycle {duty_cycle}',
-                    result_bool=False,
-                    measurement=actual_duty_cycle
-                )
-                assert False, f'Duty cycle {duty_cycle} not supported by this device'
+                error_msg = f'Duty cycle {duty_cycle} not supported by this device'
+                measured_voltage = None
+                # Assert false to ensure test failure is captured in db and test suite exits.
+                assert False, error_msg
             except KeyboardInterrupt:
-                log_test_result(
-                    test_name=f'Scan PWM Output - Duty Cycle {duty_cycle}',
-                    result_bool=False,
-                    measurement=actual_duty_cycle
-                )
-                assert False, 'Test interrupted by user'
+                error_msg = 'Test interrupted by user'
+                measured_voltage = None
+                # Assert false to ensure test failure is captured in db and test suite exits.
+                assert result, error_msg
+
+            # Single logging call for each duty cycle test
+            log_test_result(
+                test_name=f'Scan PWM Output - Duty Cycle {actual_duty_cycle}',
+                result_bool=result,
+                measurement=measured_voltage
+            )
     except Exception as e:
+        # Log here to db to capture internal exception raised during the test execution.
         log_test_result(
             test_name='test_scan_pwm_outputs',
-            result_bool=False
+            result_bool=False,
+            measurement=None
         )
         assert False, f'Error during PWM output scan: {e}'
     finally:
