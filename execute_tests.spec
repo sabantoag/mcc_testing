@@ -29,7 +29,7 @@ exe = EXE(
     pyz,
     a.scripts,
     [],
-    exclude_binaries=False,
+    exclude_binaries=True,
     name='mcc_tests',
     debug=False,
     bootloader_ignore_signals=False,
@@ -42,4 +42,14 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='mcc_testing_icon.ico',
+)
+
+coll = COLLECT(
+    exe,
+    a.binaries,
+    a.zipfiles,
+    a.datas,
+    strip=False,
+    upx=True,
+    name='mcc_tests'
 )
