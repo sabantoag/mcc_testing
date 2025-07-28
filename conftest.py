@@ -1,4 +1,5 @@
 import logging
+import os
 import pytest
 import pytest_html
 from mcculw import ul
@@ -37,7 +38,8 @@ def setup_database():
 
 def pytest_html_report_title(report):
     """Customize the HTML report title."""
-    report.title = f"9999-DD-2004 Test Report"
+    serial_number = os.environ.get("UNIT_SN", "UNKNOWN_SN")
+    report.title = f"Test Report 9999-DD-2004 for Unit SN:  {serial_number}"
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
@@ -47,7 +49,12 @@ def pytest_html_results_summary(prefix, summary, postfix):
                 '<table border="1"><tr><th>Test Name</th><th>Result</th><th>Measurement</th><th>Timestamp</th></tr>']
         for test_name, result, measurement, timestamp in results:
             if result == "FAIL":
-                row = f'<tr style="background-color: #ffe0e0;"><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{timestamp}</td></tr>'
+                row = (
+                    f'<tr style="background-color: #ffe0e0;">'
+                    f'<td>{test_name}</td>'
+                    f'<td>{result}</td>'
+                    f'<td>{measurement}</td>'
+                    f'<td>{timestamp}</td></tr>')
             else:
                 row = f'<tr><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{timestamp}</td></tr>'
             html.append(row)
