@@ -5,7 +5,7 @@ from mcculw.device_info import DaqDeviceInfo
 from mcculw import ul
 
 from .daq_setup import setup_daq_device
-from utils.polynomial import create_polynomial, CALIBRATED_COEFFICIENTS
+from utils.polynomial import create_polynomial
 from utils.daq_interface import measure_voltage
 from utils.db_logger import log_test_result
 
@@ -18,9 +18,11 @@ ANALOG_INPUT_CHANNEL = 0  # Analog input channel for reading voltage
 DIGITAL_OUT_LOW = 0  # Digital output low (auto) state
 
 # --- Runtime Configuration ---
-# TODO: This will probably need to be adjusted via testing.
-VOLTAGE_TOLERANCE = 0.5  # Tolerance for voltage measurement
+VOLTAGE_TOLERANCE_V = 0.15  # Tolerance for voltage measurement as a percentage of expected value
 TIME_DELAY_S = 1.5  # Time delay in seconds to allow hardware state to update
+# Calibrated coefficients for the polynomial used to compare against measured voltages.
+# These coefficients should be derived from a known good calibration.
+CALIBRATED_COEFFICIENTS = [-2.32407106, 6.482115, -8.96025862, 5.01013776]  # x^n + x^(n-1) + ... + x^0
 
 
 def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
@@ -62,11 +64,12 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
 
                 logger.debug(f'Measured voltage: {measured_voltage:.2f} V, Expected voltage: {expected_voltage:.2f} V')
 
-                # Check if measured voltage falls outside of expected calibrated value.
-                result = abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE
+                # Check if measured voltage falls outside of expected calibrated value within tolerance.
+                result = abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE_V
 
                 if not result:
                     error_msg = f'PWM output scan failed for duty cycle {duty_cycle}'
+                    assert False, error_msg
 
             except ul.ULError:
                 error_msg = f'Duty cycle {duty_cycle} not supported by this device'
@@ -88,7 +91,7 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
     except Exception as e:
         # Log here to db to capture internal exception raised during the test execution.
         log_test_result(
-            test_name='test_scan_pwm_outputs',
+            test_name='Test Scan PWM Outputs',
             result_bool=False,
             measurement=None
         )
