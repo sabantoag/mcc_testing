@@ -64,6 +64,7 @@ def test_auto_mode(daq_device: DaqDeviceInfo):
         test_name="Auto Mode Test",
         result_bool=result,
         measurement=measured_voltage,
+        expected=EXPECTED_AUTO_VOLTAGE
     )
     assert result, error_msg
 
@@ -105,5 +106,6 @@ def test_manual_mode(daq_device: DaqDeviceInfo):
         test_name="Manual Mode Test",
         result_bool=result,
         measurement=measured_voltage,
+        expected=EXPECTED_INPUT_VOLTAGE
     )
     assert result, error_msg

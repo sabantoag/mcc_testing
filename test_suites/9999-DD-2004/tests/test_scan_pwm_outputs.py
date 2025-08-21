@@ -68,6 +68,13 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
                 result = abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE_V
 
                 if not result:
+                    # Single logging call for each duty cycle test
+                    log_test_result(
+                        test_name=f'Scan PWM Output - Duty Cycle {actual_duty_cycle}',
+                        result_bool=result,
+                        measurement=measured_voltage,
+                        expected=expected_voltage
+                    )
                     error_msg = f'PWM output scan failed for duty cycle {duty_cycle}'
                     assert False, error_msg
 
@@ -86,14 +93,16 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
             log_test_result(
                 test_name=f'Scan PWM Output - Duty Cycle {actual_duty_cycle}',
                 result_bool=result,
-                measurement=measured_voltage
+                measurement=measured_voltage,
+                expected=expected_voltage
             )
     except Exception as e:
         # Log here to db to capture internal exception raised during the test execution.
         log_test_result(
             test_name='Test Scan PWM Outputs',
             result_bool=False,
-            measurement=None
+            measurement=None,
+            expected=None
         )
         assert False, f'Error during PWM output scan: {e}'
     finally:
