@@ -5,17 +5,14 @@ datas = [('test_suites', 'test_suites')]
 binaries = []
 hiddenimports = []
 
-# Collect all needed for pytest
-tmp_ret = collect_all('pytest')
-datas += tmp_ret[0]
-binaries += tmp_ret[1]
-hiddenimports += tmp_ret[2]
+for pkg in ['pytest', 'pytest_html', 'numpy', 'mcculw']:
+    tmp_ret = collect_all(pkg)
+    datas += tmp_ret[0]
+    binaries += tmp_ret[1]
+    hiddenimports += tmp_ret[2]
 
-# Collect all needed for numpy
-tmp_ret = collect_all('numpy')
-datas += tmp_ret[0]
-binaries += tmp_ret[1]
-hiddenimports += tmp_ret[2]
+# Add standard library modules if needed
+hiddenimports += ['sqlite3']
 
 a = Analysis(
     ['execute_tests.py'],

@@ -5,6 +5,7 @@ import tkinter as tk
 import webbrowser
 from tkinter import messagebox
 from tkinter import ttk
+import pytest
 
 
 def resource_path(relative_path):
@@ -47,10 +48,8 @@ def run_tests():
     test_dir_path = os.path.join(test_suites_dir, selected_dir)
     output_report = os.path.join(os.getcwd(), f"report_{sn}.html")
     try:
-        result = subprocess.run(
-            ["pytest", ".", f"--html={output_report}", "--self-contained-html"],
-            capture_output=True, text=True, cwd=test_dir_path,
-            creationflags=subprocess.CREATE_NO_WINDOW
+        pytest.main(
+            [".", f"--html={output_report}", "--self-contained-html"],
         )
     finally:
         progress.destroy()
