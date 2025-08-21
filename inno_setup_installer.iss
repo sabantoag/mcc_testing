@@ -23,7 +23,7 @@ OutputDir=.
 Source: "dist\mcc_tests\MccTests.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 ; Optional data files
-Source: "dist\mcc_tests\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "dist\mcc_tests\*"; DestDir: "{app}"; Flags: recursesubdirs
 
 ; Embedded VC++ Redistributable installer (offline)
 Source: "vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall

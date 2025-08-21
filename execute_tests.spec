@@ -1,7 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
 from PyInstaller.utils.hooks import collect_all
 
-datas = [('test_suites', 'test_suites')]
+datas = [('test_suites', 'test_suites'), ('db', 'db'),
+         ('mcc_testing_icon.ico', '.'), ('utils', 'utils'), ('execute_tests.py', '.')]
 binaries = []
 hiddenimports = []
 
@@ -47,7 +48,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='mcc_testing_icon.ico',
-    **{'onefile': True}
+    **{'onefile': False}
 )
 
 coll = COLLECT(

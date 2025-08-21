@@ -1,21 +1,19 @@
 import os
 import sys
-import subprocess
+import threading
 import tkinter as tk
+from tkinter import messagebox, ttk
 import webbrowser
-from tkinter import messagebox
-from tkinter import ttk
 import pytest
 
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
+    """Get absolute path to resource, works for dev and for PyInstaller."""
     if hasattr(sys, '_MEIPASS'):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
 
 def get_directories(path):
-    # Return only directories in the given path, excluding __pycache__ and hidden/system dirs
     if not os.path.exists(path):
         return []
     return [
@@ -25,57 +23,87 @@ def get_directories(path):
         and not name.startswith('.')
     ]
 
-def run_tests():
-    sn = sn_entry.get()
-    selected_dir = dir_var.get()
-    if not sn:
-        messagebox.showerror("Error", "Please enter a serial number.")
-        return
-    if not selected_dir:
-        messagebox.showerror("Error", "Please select a directory.")
-        return
+class MCCApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.geometry("300x200")
+        self.root.title("Run MCC Tests")
 
-    # Show in-progress popup
-    progress = tk.Toplevel(root)
-    progress.title("Running Tests")
-    progress.geometry("300x120")  # Set default size: width x height
-    tk.Label(progress, text="🕒 Running tests...\nPlease wait.", font=("Arial", 12)).pack(padx=20, pady=20)
-    progress.update()
+        tk.Label(root, text="Enter Serial Number:").pack(pady=5)
+        self.sn_entry = tk.Entry(root)
+        self.sn_entry.pack(pady=5)
 
-    root.update_idletasks()
+        tk.Label(root, text="Select Directory:").pack(pady=5)
+        self.test_suites_dir = resource_path("test_suites")
+        dirs = get_directories(self.test_suites_dir)
+        self.dir_var = tk.StringVar()
+        self.dir_dropdown = ttk.Combobox(root, textvariable=self.dir_var, values=dirs, state="readonly")
+        self.dir_dropdown.pack(pady=5)
+        if dirs:
+            self.dir_dropdown.current(0)
 
-    os.environ["UNIT_SN"] = sn
-    test_dir_path = os.path.join(test_suites_dir, selected_dir)
-    output_report = os.path.join(os.getcwd(), f"report_{sn}.html")
-    try:
-        pytest.main(
-            [".", f"--html={output_report}", "--self-contained-html"],
-        )
-    finally:
-        progress.destroy()
+        tk.Button(root, text="Run Tests", command=self.run_tests).pack(pady=10)
 
-    messagebox.showinfo("Done", f"Test report generated: \n{output_report}")
-    # After test completion, auto open the window with the report in a web browser.
-    webbrowser.open(output_report)
+    def run_tests(self):
+        sn = self.sn_entry.get()
+        selected_dir = self.dir_var.get()
+        if not sn:
+            messagebox.showerror("Error", "Please enter a serial number.")
+            return
+        if not selected_dir:
+            messagebox.showerror("Error", "Please select a directory.")
+            return
 
-root = tk.Tk()
-root.geometry("300x200")  # Set default size: width x height
-root.title("Run MCC Tests")
+        self.progress = tk.Toplevel(self.root)
+        self.progress.title("Running Tests")
+        self.progress.geometry("300x120")
+        tk.Label(self.progress, text="🕒 Running tests...\nPlease wait.", font=("Arial", 12)).pack(padx=20, pady=20)
+        self.progress.update()
+        self.root.update_idletasks()
 
-tk.Label(root, text="Enter Serial Number:").pack(pady=5)
-sn_entry = tk.Entry(root)
-sn_entry.pack(pady=5)
+        thread = threading.Thread(target=self._run_pytest, args=(sn, selected_dir))
+        thread.start()
 
-# Dropdown for directories from test_suites
-test_suites_dir = resource_path("test_suites")
-dirs = get_directories(test_suites_dir)
-dir_var = tk.StringVar()
-tk.Label(root, text="Select Directory:").pack(pady=5)
-dir_dropdown = ttk.Combobox(root, textvariable=dir_var, values=dirs, state="readonly")
-dir_dropdown.pack(pady=5)
-if dirs:
-    dir_dropdown.current(0)
+    def _run_pytest(self, sn, selected_dir):
+        import pytest
+        # Always use resource_path to find test_suites
+        test_suites_dir = resource_path("test_suites")
+        test_dir_path = os.path.abspath(os.path.join(test_suites_dir, selected_dir))
+        reports_dir = resource_path("reports")
+        os.makedirs(reports_dir, exist_ok=True)
+        output_report = os.path.join(reports_dir, f"report_{sn}.html")
 
-tk.Button(root, text="Run Tests", command=run_tests).pack(pady=10)
+        # Determine the bundle root (where conftest.py is)
+        if hasattr(sys, '_MEIPASS'):
+            bundle_root = sys._MEIPASS
+        else:
+            bundle_root = os.path.dirname(os.path.abspath(__file__))
 
-root.mainloop()
+        old_cwd = os.getcwd()
+        try:
+            os.chdir(bundle_root)
+            sys.path.insert(0, bundle_root)
+            print("CWD:", os.getcwd())
+            print("sys.path:", sys.path)
+            print("test_dir_path:", test_dir_path)
+            print("test_suites_dir:", test_suites_dir)
+            print("Files in test_dir_path:", os.listdir(test_dir_path))
+            tests_path = os.path.join(test_dir_path, "tests")
+            print("tests_path:", tests_path)
+            result = pytest.main([
+                tests_path,
+                f"--html={output_report}", "--self-contained-html"
+            ])
+            print("pytest.main() result:", result)
+        except Exception as e:
+            messagebox.showerror("Error", f"Test run failed:\n{e}")
+        finally:
+            os.chdir(old_cwd)
+            self.progress.destroy()
+        messagebox.showinfo("Done", f"Test report generated: \n{output_report}")
+        webbrowser.open(output_report)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = MCCApp(root)
+    root.mainloop()
