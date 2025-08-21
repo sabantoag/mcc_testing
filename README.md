@@ -15,6 +15,8 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 - Python 3.8+
 - Git
 - [InstaCal 6.7+](https://digilent.com/reference/software/start)
+- [Inno Setup 6.5.1+](https://jrsoftware.org/isinfo.php)
+- [VC++](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ### Installation
 1. Clone the repository:
