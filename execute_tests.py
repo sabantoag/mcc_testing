@@ -9,9 +9,19 @@ import pytest
 
 def resource_path(relative_path):
     """Get absolute path to resource, works for dev and for PyInstaller."""
-    if hasattr(sys, '_MEIPASS'):
-        return os.path.join(sys._MEIPASS, relative_path)
-    return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative_path)
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        if hasattr(sys, '_MEIPASS'):
+            base_path = sys._MEIPASS
+        else:
+            base_path = os.path.dirname(os.path.abspath(__file__))
+
+        full_path = os.path.join(base_path, relative_path)
+        print(f"Resource path for '{relative_path}': {full_path}")  # Debug
+        return full_path
+    except Exception as e:
+        print(f"Error in resource_path: {e}")  # Debug
+        return relative_path
 
 def get_directories(path):
     if not os.path.exists(path):
@@ -73,28 +83,13 @@ class MCCApp:
         os.makedirs(reports_dir, exist_ok=True)
         output_report = os.path.join(reports_dir, f"report_{sn}.html")
 
-        # Determine the bundle root (where conftest.py is)
-        if hasattr(sys, '_MEIPASS'):
-            bundle_root = sys._MEIPASS
-        else:
-            bundle_root = os.path.dirname(os.path.abspath(__file__))
-
         old_cwd = os.getcwd()
         try:
-            os.chdir(bundle_root)
-            sys.path.insert(0, bundle_root)
-            print("CWD:", os.getcwd())
-            print("sys.path:", sys.path)
-            print("test_dir_path:", test_dir_path)
-            print("test_suites_dir:", test_suites_dir)
-            print("Files in test_dir_path:", os.listdir(test_dir_path))
             tests_path = os.path.join(test_dir_path, "tests")
-            print("tests_path:", tests_path)
             result = pytest.main([
                 tests_path,
                 f"--html={output_report}", "--self-contained-html"
             ])
-            print("pytest.main() result:", result)
         except Exception as e:
             messagebox.showerror("Error", f"Test run failed:\n{e}")
         finally:
