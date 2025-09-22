@@ -7,5 +7,25 @@ control of an open drain digital pin. This analog signal drives an opto-isolator
 output with an LC filter. Finally there is a set of SSRs, one NO and one NC, that
 allow a signal to pass through unmodified or use the output of the PWM LC circuit.
 
-## Schematic
-![Schematic Diagram](9999-DD-2004.pdf)
+## Schematics
+- ![Schematic Diagram](documentation/9999-DD-2004.pdf)
+- ![Test Schematic Diagram](documentation/9999-DD-2004_Test_Schematic.pdf)
+
+## Test Procedure
+1. Plug in MCC Testing DAQ to laptop (Top LED should be illuminated to denote DAQ is powered up).
+2. Open InstaCal to confirm board is identified correctly (Board Number 0).
+
+  ![alt text](documentation/images/InstaCal_DAQ_Setup.png)
+
+3. Within InstaCal, confirm DAQ Input Mode is set to _Single Ended_.
+
+  ![alt text](documentation/images/InstaCal_DAQ_Configuration.png)
+
+4. Plug in board to DAQ test setup.
+5. Select MCC Tests shortcut icon on desktop.
+6. Enter Serial Number (SN) of board.
+7. Select board Part Number (PN) from drop down.
+8. Select Run Tests to execute tests.
+9. Following test execution, an html test report shall be opened in a web browser.
+    - Report is also saved to local `reports` directory as well.
+    - Database results are included in the `db` directory as `results.db`.
