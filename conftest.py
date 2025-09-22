@@ -1,5 +1,4 @@
 import logging
-import os
 import pytest
 import pytest_html
 from mcculw import ul
@@ -36,17 +35,27 @@ def setup_database():
     logger.debug("Database initialized")
 
 
+def pytest_addoption(parser):
+    """Add options for PCB testing"""
+    parser.addoption("--serial-number", action="store", default="Unknown",
+                     help="Board Serial Number")
+    parser.addoption("--part-number", action="store", default="Unknown",
+                     help="Board Part Number")
+
+
 def pytest_html_report_title(report):
     """Customize the HTML report title."""
-    serial_number = os.environ.get("UNIT_SN", "UNKNOWN_SN")
-    report.title = f"Test Report 9999-DD-2004 for Unit SN:  {serial_number}"
+    serial_number = report.config.getoption("--serial-number")
+    part_number = report.config.getoption("--part-number")
+    report.title = \
+        f"Test Report for PN: {part_number} | SN: {serial_number}"
 
 
 def pytest_html_results_summary(prefix, summary, postfix):
     results = fetch_test_results()
     if results:
         html = ['<h2>Database Test Results</h2>',
-                '<table border="1"><tr><th>Test Name</th><th>Result</th><th>Measurement</th><th>Timestamp</th></tr>']
+                '<table border="1"><tr><th>Test Name</th><th>Result</th><th>Measurement</th><th>Expected</th><th>Timestamp</th></tr>']
         for test_name, result, measurement, expected, timestamp in results:
             if result == "FAIL":
                 row = (

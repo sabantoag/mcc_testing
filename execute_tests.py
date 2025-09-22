@@ -57,6 +57,7 @@ class MCCApp:
     def run_tests(self):
         sn = self.sn_entry.get()
         selected_dir = self.dir_var.get()
+        pn = str(selected_dir).upper()  # PN is the directory name
         if not sn:
             messagebox.showerror("Error", "Please enter a serial number.")
             return
@@ -71,10 +72,10 @@ class MCCApp:
         self.progress.update()
         self.root.update_idletasks()
 
-        thread = threading.Thread(target=self._run_pytest, args=(sn, selected_dir))
+        thread = threading.Thread(target=self._run_pytest, args=(sn, selected_dir, pn))
         thread.start()
 
-    def _run_pytest(self, sn, selected_dir):
+    def _run_pytest(self, sn, selected_dir, pn):
         import pytest
         # Always use resource_path to find test_suites
         test_suites_dir = resource_path("test_suites")
@@ -88,7 +89,7 @@ class MCCApp:
             tests_path = os.path.join(test_dir_path, "tests")
             result = pytest.main([
                 tests_path,
-                f"--html={output_report}", "--self-contained-html"
+                f"--html={output_report}", "--self-contained-html", f"--serial-number={sn}", f"--part-number={pn}"
             ])
         except Exception as e:
             messagebox.showerror("Error", f"Test run failed:\n{e}")
