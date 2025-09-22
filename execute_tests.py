@@ -23,6 +23,7 @@ def resource_path(relative_path):
         print(f"Error in resource_path: {e}")  # Debug
         return relative_path
 
+
 def get_directories(path):
     if not os.path.exists(path):
         return []
@@ -32,6 +33,7 @@ def get_directories(path):
         and not name.startswith('__')
         and not name.startswith('.')
     ]
+
 
 class MCCApp:
     def __init__(self, root):
@@ -76,7 +78,6 @@ class MCCApp:
         thread.start()
 
     def _run_pytest(self, sn, selected_dir, pn):
-        import pytest
         # Always use resource_path to find test_suites
         test_suites_dir = resource_path("test_suites")
         test_dir_path = os.path.abspath(os.path.join(test_suites_dir, selected_dir))
