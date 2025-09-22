@@ -66,7 +66,7 @@ def pytest_html_results_summary(prefix, summary, postfix):
                     f'<td>{expected}<td>'
                     f'<td>{timestamp}</td></tr>')
             else:
-                row = f'<tr><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{expected}<td><td>{timestamp}</td></tr>'
+                row = f'<tr><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{expected}</td><td>{timestamp}</td></tr>'
             html.append(row)
         html.append('</table>')
         summary.extend([pytest_html.extras.html(''.join(html))])
