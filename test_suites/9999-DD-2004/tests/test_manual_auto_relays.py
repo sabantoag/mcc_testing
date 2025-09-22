@@ -22,9 +22,10 @@ TIME_DELAY_S = 1
 # Voltage divider circuit from 5V to 2.5V (R1=1k, R2=2.2k) with ~1.56mA current draw.
 # This is the expected voltage when the SSR is in manual mode to simulate external
 # circuitry that would be from the tractor.
-EXPECTED_INPUT_VOLTAGE = 3.5
+EXPECTED_MANUAL_INPUT_VOLTAGE = 3.5
 # TMR pin should be set to 0 duty cycle, so the voltage should be close to supply voltage (+5V) for auto mode.
 EXPECTED_AUTO_VOLTAGE = 4.75
+MINIMUM_VOLTAGE = 2.75  # Minimum voltage to consider as a valid HIGH signal (half of 5V supply)
 
 
 def test_auto_mode(daq_device: DaqDeviceInfo):
@@ -89,7 +90,7 @@ def test_manual_mode(daq_device: DaqDeviceInfo):
         # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into
         # analog input channel.
         logger.debug(f'Measured voltage in manual mode: {measured_voltage:.2f} V')
-        result = measured_voltage <= EXPECTED_INPUT_VOLTAGE
+        result = MINIMUM_VOLTAGE <= measured_voltage <= EXPECTED_MANUAL_INPUT_VOLTAGE
 
         if not result:
             error_msg = f"Manual mode test result as {result} with measured voltage: {measured_voltage:.2f} V"
@@ -106,6 +107,6 @@ def test_manual_mode(daq_device: DaqDeviceInfo):
         test_name="Manual Mode Test",
         result_bool=result,
         measurement=measured_voltage,
-        expected=EXPECTED_INPUT_VOLTAGE
+        expected=EXPECTED_MANUAL_INPUT_VOLTAGE
     )
     assert result, error_msg
