@@ -1,0 +1,31 @@
+name: Push Main
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: 🧹 Run flake8 lint
+        run: |
+          if exist setup.cfg (
+            flake8 --config=setup.cfg
+          ) else if exist .flake8 (
+            flake8 --config=.flake8
+          ) else (
+            flake8
+          )
