@@ -14,6 +14,7 @@ dist/
 .pre-commit-config.yaml
 
 # Ignore SQLite or test result databases
+db/
 *.db
 *.sqlite
 *.sqlite3

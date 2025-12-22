@@ -22,10 +22,9 @@ allow a signal to pass through unmodified or use the output of the PWM LC circui
   ![alt text](documentation/images/InstaCal_DAQ_Configuration.png)
 
 4. Plug in board to DAQ test setup.
-5. Select MCC Tests shortcut icon on desktop.
-6. Enter Serial Number (SN) of board.
-7. Select board Part Number (PN) from drop down.
-8. Select Run Tests to execute tests.
-9. Following test execution, an html test report shall be opened in a web browser.
-    - Report is also saved to local `reports` directory as well.
+5. Open windows command prompt.
+6. Enter CLI command to execute desired tests.
+    - `pytest tests/9999-DD-2004 --serial-number=<SN> --part-number=<PN>`
+7. Following test execution, an html test report shall be opened in a web browser.
+    - Report is also saved to local `reports` directory as well as `report.html`.
     - Database results are included in the `db` directory as `results.db`.

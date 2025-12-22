@@ -12,11 +12,9 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 
 ### Prerequisites
 - Windows 10 or later
-- Python 3.8+
+- Python 3.13+
 - Git
 - [InstaCal 6.7+](https://digilent.com/reference/software/start)
-- [Inno Setup 6.5.1+](https://jrsoftware.org/isinfo.php)
-- [VC++](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
 ### Installation
 1. Clone the repository:
@@ -32,11 +30,15 @@ This repository contains tools and scripts for testing and validating MCC (Modul
 ### Usage
 Execute the pytest suite for a package:
 ```
-pytest test_suites/
+pytest tests/<PACKAGE> --serial-number=<SERIAL_NUMBER> --part-number=<PART_NUMBER>
 ```
-Or with html generation
+Example
 ```
-pytest test_suites/ --html=reports/report.html --self-contained-html
+pytest tests/9999-DD-2004 --serial-number=0123456789 --part-number=9999-DD-2004
+```
+To enable logging, add the --log-cli-level argument.
+```
+pytest tests/<PACKAGE> --serial-number=<SERIAL_NUMBER> --part-number=<PART_NUMBER> --log-cli-level=DEBUG
 ```
 
 ## Contributing

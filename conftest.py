@@ -1,6 +1,9 @@
 import logging
+
 import pytest
 import pytest_html
+import webbrowser
+import os
 from mcculw import ul
 from mcculw.device_info import DaqDeviceInfo
 
@@ -70,3 +73,9 @@ def pytest_html_results_summary(prefix, summary, postfix):
             html.append(row)
         html.append('</table>')
         summary.extend([pytest_html.extras.html(''.join(html))])
+
+
+def pytest_sessionfinish(session, exitstatus):
+    report_path = os.path.abspath("reports/report.html")
+    if os.path.exists(report_path):
+        webbrowser.open_new_tab(f"file:///{report_path}")
