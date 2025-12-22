@@ -44,5 +44,17 @@ pytest tests/<PACKAGE> --serial-number=<SERIAL_NUMBER> --part-number=<PART_NUMBE
 ## Contributing
 Contributions are welcome! Please open issues or submit pull requests.
 
+### Generating Release
+To create new version, use bump2version package to execute automated workflow to create wheel file.
+Use `patch/minor/major` to specify release version type.
+```
+bump2version --tag --tag-name v{new_version} <patch/minor/major>
+```
+
+Then push the tag
+```
+git push && git push --tags
+```
+
 ## License
 All Rights Reserved by Sabanto, Inc.
