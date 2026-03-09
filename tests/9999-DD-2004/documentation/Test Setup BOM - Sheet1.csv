@@ -1,7 +1,7 @@
 Reference,Qty,units,Mfg,PN,Description,#
 Q1,1,#,onsemi,2N7000TA,MOSFET N-CH 60V 200MA TO92-3,1
-R1,1,#,Stackpole Electronics Inc,CF14JT1K00,RES 1K OHM 5% 1/4W AXIAL,2
-R2,1,#,Stackpole Electronics Inc,CF14JT2K20,RES 2.2K OHM 5% 1/4W AXIAL,3
+R1,1,#,YAGEO,MFR-25FRF52-1K,RES 1K OHM 1% 1/4W AXIAL,2
+R2,1,#,TE Connectivity Passive Product,LR0204F2K2,RES 2.2K OHM 1% 1/4W AXIAL,3
 -,1,#,SparkFun Electronics,1568-12070-ND,BREADBOARD GENERAL PURPOSE PTH,4
 -,1,#,TE Connectivity Deutsch Connectors,DT06-08SA,CONN PLUG HSG 8POS,5
 -,7,#,TE Connectivity Deutsch Connectors,0462-201-16141,CONN SCKT 16-20AWG NICKEL CRIMP,6
