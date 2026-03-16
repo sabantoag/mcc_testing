@@ -3,4 +3,3 @@ mcculw>=1.0.0
 numpy>=2.3,<2.4       # Pin to latest stable 2.3.x release for compatibility
 pytest>=8.1,<9.0      # Ensure compatibility with plugins
 pytest-html>=4.1,<5.0 # Compatible with pytest 8.x
-bump2version>=1.0,<2.0
