@@ -49,7 +49,8 @@ def test_scan_pwm_outputs(daq_device: DaqDeviceInfo):
                 sleep(TIME_DELAY_S)
                 measured_voltage = measure_voltage(daq_device, ANALOG_INPUT_CHANNEL)
                 expected_voltage = calibration_polynomial(actual_duty_cycle)
-                logger.debug(f'Measured voltage: {measured_voltage:.2f} V, Expected voltage: {expected_voltage:.2f} V')
+                logger.debug(f'Measured voltage: {measured_voltage: .2f} V, '
+                             f'Expected voltage: {expected_voltage: .2f} V')
                 result = abs(measured_voltage - expected_voltage) <= VOLTAGE_TOLERANCE_V
                 if not result:
                     error_msg = f'PWM output scan failed for duty cycle {duty_cycle}'

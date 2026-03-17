@@ -12,8 +12,9 @@ def measure_voltage(daq_device: DaqDeviceInfo, channel: int) -> float:
     Returns:
         float: The measured voltage in engineering units.
     """
-    raw_measured_voltage = ul.a_in(daq_device.board_num, channel, daq_device.get_ai_info().supported_ranges[0])  # Read the input voltage.
+    # Read the input voltage.
+    raw_measured_voltage = ul.a_in(daq_device.board_num, channel, daq_device.get_ai_info().supported_ranges[0])
     measured_voltage = ul.to_eng_units(daq_device.board_num,
-                                        daq_device.get_ai_info().supported_ranges[0],
-                                        raw_measured_voltage)  # Convert to engineering units.
+                                       daq_device.get_ai_info().supported_ranges[0],
+                                       raw_measured_voltage)  # Convert to engineering units.
     return measured_voltage

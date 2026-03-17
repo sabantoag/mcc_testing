@@ -57,25 +57,46 @@ def pytest_html_report_title(report):
 def pytest_html_results_summary(prefix, summary, postfix):
     results = fetch_test_results()
     if results:
-        html = ['<h2>Database Test Results</h2>',
-                '<table border="1"><tr><th>Test Name</th><th>Result</th><th>Measurement</th><th>Expected</th><th>Timestamp</th></tr>']
+        html = [
+            '<h2>Database Test Results</h2>',
+            (
+                '<table border="1">'
+                '<tr>'
+                '<th>Test Name</th>'
+                '<th>Result</th>'
+                '<th>Measurement</th>'
+                '<th>Expected</th>'
+                '<th>Timestamp</th>'
+                '</tr>'
+            )
+        ]
         for test_name, result, measurement, expected, timestamp in results:
             if result == "FAIL":
                 row = (
-                    f'<tr style="background-color: #ffe0e0;">'
+                    f'<tr style="background-color: #ffe0e0 ">'
                     f'<td>{test_name}</td>'
                     f'<td>{result}</td>'
                     f'<td>{measurement}</td>'
                     f'<td>{expected}</td>'
-                    f'<td>{timestamp}</td></tr>')
+                    f'<td>{timestamp}</td></tr>'
+                )
             else:
-                row = f'<tr><td>{test_name}</td><td>{result}</td><td>{measurement}</td><td>{expected}</td><td>{timestamp}</td></tr>'
+                row = (
+                    f'<tr>'
+                    f'<td>{test_name}</td>'
+                    f'<td>{result}</td>'
+                    f'<td>{measurement}</td>'
+                    f'<td>{expected}</td>'
+                    f'<td>{timestamp}</td></tr>'
+                )
             html.append(row)
         html.append('</table>')
-        summary.extend([pytest_html.extras.html(''.join(html))])
+        summary.extend([
+            pytest_html.extras.html(''.join(html))
+        ])
 
 
 def pytest_sessionfinish(session, exitstatus):
     report_path = os.path.abspath("reports/report.html")
     if os.path.exists(report_path):
-        webbrowser.open_new_tab(f"file:///{report_path}")
+        webbrowser.open_new_tab("file:///" + report_path)

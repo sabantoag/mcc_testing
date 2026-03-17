@@ -4,6 +4,7 @@ import os
 
 DB_PATH = os.path.join(os.path.dirname(__file__), '../db/results.db')
 
+
 def initialize_db():
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute('''
@@ -17,6 +18,7 @@ def initialize_db():
             )
         ''')
 
+
 def log_test_result(test_name, result_bool, measurement=None, expected=None):
     with sqlite3.connect(DB_PATH) as conn:
         conn.execute('''
@@ -24,12 +26,14 @@ def log_test_result(test_name, result_bool, measurement=None, expected=None):
             VALUES (?, ?, ?, ?, ?)
         ''', (test_name, 'PASS' if result_bool else 'FAIL', measurement, expected, datetime.now().isoformat()))
 
+
 def fetch_test_results():
     import sqlite3
     DB_PATH = os.path.join(os.path.dirname(__file__), '../db/results.db')
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.execute('SELECT test_name, result, measurement, expected, timestamp FROM test_results')
         return cursor.fetchall()
+
 
 def clear_test_results():
     with sqlite3.connect(DB_PATH) as conn:

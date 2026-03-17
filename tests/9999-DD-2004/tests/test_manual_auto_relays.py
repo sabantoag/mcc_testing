@@ -47,11 +47,11 @@ def test_auto_mode(daq_device: DaqDeviceInfo):
 
         # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into
         # analog input channel.
-        logger.debug(f'Measured voltage in auto mode: {measured_voltage:.2f} V')
+        logger.debug(f'Measured voltage in auto mode: {measured_voltage: .2f} V')
         result = measured_voltage >= EXPECTED_AUTO_VOLTAGE
 
         if not result:
-            error_msg = f"Auto mode test result as {result} with measured voltage: {measured_voltage:.2f} V"
+            error_msg = f"Auto mode test result as {result} with measured voltage: {measured_voltage: .2f} V"
     except Exception as e:
         logger.debug(f"An error occurred during auto mode test: {e}")
         error_msg = f"Auto mode test failed with error: {e}"
@@ -89,11 +89,11 @@ def test_manual_mode(daq_device: DaqDeviceInfo):
 
         # Get result of test by comparing measured voltage to expected voltage from +5V power supply passed into
         # analog input channel.
-        logger.debug(f'Measured voltage in manual mode: {measured_voltage:.2f} V')
+        logger.debug(f'Measured voltage in manual mode: {measured_voltage: .2f} V')
         result = MINIMUM_VOLTAGE <= measured_voltage <= EXPECTED_MANUAL_INPUT_VOLTAGE
 
         if not result:
-            error_msg = f"Manual mode test result as {result} with measured voltage: {measured_voltage:.2f} V"
+            error_msg = f"Manual mode test result as {result} with measured voltage: {measured_voltage: .2f} V"
     except Exception as e:
         logger.debug(f"An error occurred during manual mode test: {e}")
         error_msg = f"Manual mode test failed with error: {e}"
