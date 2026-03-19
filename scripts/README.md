@@ -5,7 +5,7 @@
 **Target field:**
 
 ```
-%WINDIR%\System32\cmd.exe "/C" C:\Users\<user>\AppData\Local\miniconda3\Scripts\activate.bat C:\Users\<user>\AppData\Local\miniconda3 && "<FILE_PATH>\mcc_testing-0.1\scripts\execute_test.bat"
+%WINDIR%\System32\cmd.exe "/C" C:\Users\<user>\AppData\Local\miniconda3\Scripts\activate.bat C:\Users\<user>\AppData\Local\miniconda3 && "<FILE_PATH>\mcc_testing-<release>\scripts\execute_tests.bat"
 ```
 
 **Open In field:**
@@ -22,3 +22,8 @@ Completes the following operations
 - Deactivates environment after test completion
 
 ---
+
+
+## NOTES:
+
+Need to update batch file to execute appropriate virtual environment and from release directory
